@@ -9,7 +9,6 @@ import (
 	"math/cmplx"
 	"os"
 	"runtime"
-	"strconv"
 	"sync/atomic"
 	"time"
 )
@@ -21,9 +20,9 @@ var (
 	done    uint64
 	width   float64
 	height  float64
-	r       int64
-	g       int64
-	b       int64
+	csr     int
+	csg     int
+	csb     int
 	zh      float64
 	zv      float64
 )
@@ -50,11 +49,10 @@ func main() {
 	flag.StringVar(&fname, "f", "mandelbrot.png", "destination filename")
 	flag.Float64Var(&width, "w", 2560, "fractal width")
 	flag.Float64Var(&height, "h", 2560, "fractal height")
-	flag.StringVar(&cscheme, "c", "231", "color scheme")
+	flag.IntVar(&csr, "r", 2, "color scheme (red)")
+	flag.IntVar(&csg, "g", 3, "color scheme (green)")
+	flag.IntVar(&csb, "b", 1, "color scheme (blue)")
 	flag.Parse()
-	r, _ = strconv.ParseInt(string(cscheme[0]), 10, 10)
-	g, _ = strconv.ParseInt(string(cscheme[1]), 10, 10)
-	b, _ = strconv.ParseInt(string(cscheme[2]), 10, 10)
 	zh = 2.4
 	zv = 2.4
 
@@ -71,7 +69,7 @@ func main() {
 				yf := float64(y)/height*zh - (zh / 2.0)
 				c := complex(xf, yf)
 				calcval := int(mandel(c) * 255)
-				colval := color.RGBA{uint8(int(r) * calcval % 255), uint8(int(g) * calcval % 255), uint8(int(b) * calcval % 255), 255}
+				colval := color.RGBA{uint8(int(csr) * calcval % 255), uint8(int(csg) * calcval % 255), uint8(int(csb) * calcval % 255), 255}
 				img.Set(x, y, colval)
 			}
 			atomic.AddUint64(&done, 1)
