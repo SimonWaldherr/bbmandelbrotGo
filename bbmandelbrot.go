@@ -80,6 +80,7 @@ func main() {
 			atomic.AddUint64(&done, 1)
 		}(width, x)
 	}
+
 	for todo > done {
 		fmt.Printf("\033[2Jcalculated %v%v of Mandelbrot set\n", int(100/float64(todo)*float64(done)), "%")
 		time.Sleep(time.Millisecond * 10)
@@ -87,6 +88,7 @@ func main() {
 
 	file, err := os.Create(fname)
 	defer file.Close()
+
 	if err != nil || file == nil {
 		file, err = os.Open(fname)
 		defer file.Close()
