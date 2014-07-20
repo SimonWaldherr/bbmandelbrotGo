@@ -69,7 +69,12 @@ func main() {
 				yf := float64(y)/height*zh - (zh / 2.0)
 				c := complex(xf, yf)
 				calcval := int(mandel(c) * 255)
-				colval := color.RGBA{uint8(int(csr) * calcval % 255), uint8(int(csg) * calcval % 255), uint8(int(csb) * calcval % 255), 255}
+				colval := color.RGBA{
+					uint8(int(csr) * calcval % 255),
+					uint8(int(csg) * calcval % 255),
+					uint8(int(csb) * calcval % 255),
+					255,
+				}
 				img.Set(x, y, colval)
 			}
 			atomic.AddUint64(&done, 1)
