@@ -6,6 +6,7 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"log"
 	"math/cmplx"
 	"os"
 	"runtime"
@@ -97,13 +98,13 @@ func main() {
 		file, err = os.Open(fname)
 		defer file.Close()
 		if err != nil {
-			panic(fmt.Sprintf("Error opening file: %s\n", err))
+			log.Fatalf("Error opening file: %s\n", err)
 		}
 	}
 
 	err = png.Encode(file, img)
 	if err != nil {
-		panic(fmt.Sprintf("Error encoding image: %s\n", err))
+		log.Fatalf("Error encoding image: %s\n", err)
 	}
 	fmt.Printf("\033[2Jimage saved to %v after %v\n", fname, time.Since(start))
 }
