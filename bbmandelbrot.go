@@ -91,15 +91,11 @@ func main() {
 		}
 	}
 
-	file, err := os.Create(fname)
+	file, err := os.OpenFile(fname, os.O_CREATE|os.O_WRONLY, 0644)
 	defer file.Close()
 
-	if err != nil || file == nil {
-		file, err = os.Open(fname)
-		defer file.Close()
-		if err != nil {
-			log.Fatalf("Error opening file: %s\n", err)
-		}
+	if err != nil {
+		log.Fatalf("Error opening file: %s\n", err)
 	}
 
 	err = png.Encode(file, img)
