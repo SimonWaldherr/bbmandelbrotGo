@@ -64,7 +64,7 @@ func main() {
 
 	for x := 0; x < int(width); x++ {
 		go func(width float64, x int) {
-			for y := 0; y < int(width); y++ {
+			for y := 0; y < int(height); y++ {
 				xf := float64(x)/width*zv - (zv/2.0 + 0.5)
 				yf := float64(y)/height*zh - (zh / 2.0)
 				c := complex(xf, yf)
