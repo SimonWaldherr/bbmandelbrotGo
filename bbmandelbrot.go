@@ -63,7 +63,7 @@ func main() {
 	done = 0
 
 	for x := 0; x < int(width); x++ {
-		go func(width float64, x int) {
+		go func(x int) {
 			for y := 0; y < int(height); y++ {
 				xf := float64(x)/width*zv - (zv/2.0 + 0.5)
 				yf := float64(y)/height*zh - (zh / 2.0)
@@ -78,7 +78,7 @@ func main() {
 				img.Set(x, y, colval)
 			}
 			atomic.AddUint64(&done, 1)
-		}(width, x)
+		}(x)
 	}
 
 	for todo > done {
