@@ -81,9 +81,13 @@ func main() {
 		}(x)
 	}
 
-	for todo > done {
-		fmt.Printf("\033[2Jcalculated %v%v of Mandelbrot set\n", int(100/float64(todo)*float64(done)), "%")
-		time.Sleep(time.Millisecond * 10)
+	for {
+		if completed := atomic.LoadUint64(&done); todo > completed {
+			fmt.Printf("\033[2Jcalculated %v%v of Mandelbrot set\n", int(100/float64(todo)*float64(completed)), "%")
+			time.Sleep(time.Millisecond * 10)
+		} else {
+			break
+		}
 	}
 
 	file, err := os.Create(fname)
