@@ -1,9 +1,9 @@
 package main
 
 import (
-	bbmandelbrot ".."
 	"flag"
 	"fmt"
+	bbmandelbrot "github.com/SimonWaldherr/bbmandelbrot.go"
 	"image/png"
 	"os"
 	"runtime"

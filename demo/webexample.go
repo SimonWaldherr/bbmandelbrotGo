@@ -1,9 +1,9 @@
 package main
 
 import (
-	bbmandelbrot ".."
 	"encoding/base64"
 	"fmt"
+	bbmandelbrot "github.com/SimonWaldherr/bbmandelbrot.go"
 	"image/png"
 	"io/ioutil"
 	"log"
