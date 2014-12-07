@@ -41,7 +41,7 @@ func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*i
 	zv = 2.4
 
 	for x := cx1; x < cx2; x++ {
-		go func(width int, x int) {
+		go func(x uint64) {
 			for y := cy1; y < cy2; y++ {
 				xf := float64(x)/float64(width)*zv - (zv/2.0 + 0.5)
 				yf := float64(y)/float64(height)*zh - (zh / 2.0)
@@ -56,13 +56,18 @@ func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*i
 				img.Set(int(x)-int(cx1), int(y)-int(cy1), colval)
 			}
 			atomic.AddUint64(&done, 1)
-		}(int(width), int(x))
+		}(x)
 	}
 
 	var retstr string
-	for todo > done {
-		retstr = fmt.Sprintf("\033[2Jcalculated %v%v of Mandelbrot set", int(100/float64(todo)*float64(done)), "%")
-		time.Sleep(time.Millisecond * 10)
+
+	for {
+		if completed := atomic.LoadUint64(&done); todo > completed {
+			retstr = fmt.Sprintf("\033[2Jcalculated %v%v of Mandelbrot set\n", int(100/float64(todo)*float64(completed)), "%")
+			time.Sleep(time.Millisecond * 10)
+		} else {
+			break
+		}
 	}
 
 	return img, retstr

@@ -1,10 +1,13 @@
+// +build local
+
 package main
 
 import (
+	bbmandelbrot ".."
 	"flag"
 	"fmt"
-	bbmandelbrot "github.com/SimonWaldherr/bbmandelbrot.go"
 	"image/png"
+	"log"
 	"os"
 	"runtime"
 	"time"
@@ -50,19 +53,16 @@ func main() {
 	img, retstr := bbmandelbrot.Mandelbrot(width, height, cx1, cx2, cy1, cy2, csr, csg, csb)
 	fmt.Println(retstr)
 
-	file, err := os.Create(fname)
+	file, err := os.OpenFile(fname, os.O_CREATE|os.O_WRONLY, 0644)
 	defer file.Close()
 
-	if err != nil || file == nil {
-		file, err = os.Open(fname)
-		defer file.Close()
-		if err != nil {
-			panic(fmt.Sprintf("Error opening file: %s\n", err))
-		}
+	if err != nil {
+		log.Fatalf("Error opening file: %s\n", err)
 	}
+
 	err = png.Encode(file, img)
 	if err != nil {
-		panic(fmt.Sprintf("Error encoding image: %s\n", err))
+		log.Fatalf("Error encoding image: %s\n", err)
 	}
 	fmt.Printf("\033[2Jimage saved to %v after %v\n", fname, time.Since(start))
 }

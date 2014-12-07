@@ -1,9 +1,11 @@
+// +build local
+
 package main
 
 import (
+	bbmandelbrot ".."
 	"encoding/base64"
 	"fmt"
-	bbmandelbrot "github.com/SimonWaldherr/bbmandelbrot.go"
 	"image/png"
 	"io/ioutil"
 	"log"
@@ -69,20 +71,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("generating ", fname)
 				img, _ := bbmandelbrot.Mandelbrot(width, height, cx1+160*x, cx1+160*(x+1), cy1+160*y, cy1+160*(y+1), csr, csg, csb)
 
-				file, err := os.Create(fname)
+				file, err := os.OpenFile(fname, os.O_CREATE|os.O_WRONLY, 0644)
 				defer file.Close()
 
-				if err != nil || file == nil {
-					file, err = os.Open(fname)
-					defer file.Close()
-					if err != nil {
-						fmt.Println(err)
-					}
+				if err != nil {
+					log.Fatalf("Error opening file: %s\n", err)
 				}
 
 				err = png.Encode(file, img)
 				if err != nil {
-					fmt.Println(err)
+					log.Fatalf("Error encoding image: %s\n", err)
 				}
 			}
 
@@ -97,9 +95,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	var port string = ":8080"
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":8080", nil)
+	log.Printf("Listen for HTTP connections on port %v\n", port)
+	err := http.ListenAndServe(port, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
