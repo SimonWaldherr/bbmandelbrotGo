@@ -63,10 +63,10 @@ func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*i
 		go func(x uint64) {
 			defer wg.Done()
 			if fullHeight {
-				for y := cy1; y < cy2; y++ {
+				for y := cy1; y < cy2+1; y++ {
 					colval := pixelColor(x, y, width, height, csr, csg, csb)
 					img.Set(int(x)-int(cx1), int(y), colval)
-					img.Set(int(x)-int(cx1), int(height)-int(y)-1, colval)
+					img.Set(int(x)-int(cx1), int(height)-int(y), colval)
 				}
 			} else {
 				for y := cy1; y < cy2; y++ {
