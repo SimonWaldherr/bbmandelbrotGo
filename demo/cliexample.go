@@ -9,7 +9,6 @@ import (
 	"image/png"
 	"log"
 	"os"
-	"runtime"
 	"time"
 )
 
@@ -29,7 +28,6 @@ var (
 
 func main() {
 	start := time.Now()
-	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	flag.StringVar(&fname, "f", "mandelbrot.png", "destination filename")
 	flag.Uint64Var(&width, "w", 2560, "fractal width")
@@ -50,8 +48,7 @@ func main() {
 		cy2 = height
 	}
 
-	img, retstr := bbmandelbrot.Mandelbrot(width, height, cx1, cx2, cy1, cy2, csr, csg, csb)
-	fmt.Println(retstr)
+	img, _ := bbmandelbrot.Mandelbrot(width, height, cx1, cx2, cy1, cy2, csr, csg, csb)
 
 	file, err := os.OpenFile(fname, os.O_CREATE|os.O_WRONLY, 0644)
 	defer file.Close()

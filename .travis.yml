@@ -1,6 +1,9 @@
 language: go
 
+sudo: false
+
 go:
+  - release
   - tip
 
 before_install:

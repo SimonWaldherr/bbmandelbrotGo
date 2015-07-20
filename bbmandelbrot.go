@@ -1,12 +1,10 @@
 package bbmandelbrot
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"math/cmplx"
-	"sync/atomic"
-	"time"
+	"sync"
 )
 
 const (
@@ -14,11 +12,14 @@ const (
 )
 
 var (
-	todo uint64
-	done uint64
-	zh   float64
-	zv   float64
+	zh float64
+	zv float64
 )
+
+func init() {
+	zh = 2.4
+	zv = 2.4
+}
 
 func mandel(c complex128) float64 {
 	z := complex128(0)
@@ -31,44 +32,52 @@ func mandel(c complex128) float64 {
 	return 0
 }
 
+func pixelColor(x, y, width, height uint64, csr, csg, csb int) color.RGBA {
+	xf := float64(x)/float64(width)*zv - (zv/2.0 + 0.5)
+	yf := float64(y)/float64(height)*zh - (zh / 2.0)
+	c := complex(xf, yf)
+	calcval := int(mandel(c) * 255)
+	colval := color.RGBA{
+		uint8(int(csr) * calcval % 255),
+		uint8(int(csg) * calcval % 255),
+		uint8(int(csb) * calcval % 255),
+		255,
+	}
+	return colval
+}
+
 func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*image.RGBA, string) {
+	var wg sync.WaitGroup
+	var fullHeight bool
+
 	background := image.Rect(0, 0, int(cx2-cx1), int(cy2-cy1))
 	img := image.NewRGBA(background)
 
-	todo = uint64(cx2 - cx1)
-	done = 0
-	zh = 2.4
-	zv = 2.4
+	if height == cy2 && cy1 == 0 {
+		fullHeight = true
+		cy2 = cy2/2
+	}
 
 	for x := cx1; x < cx2; x++ {
+		wg.Add(1)
 		go func(x uint64) {
-			for y := cy1; y < cy2; y++ {
-				xf := float64(x)/float64(width)*zv - (zv/2.0 + 0.5)
-				yf := float64(y)/float64(height)*zh - (zh / 2.0)
-				c := complex(xf, yf)
-				calcval := int(mandel(c) * 255)
-				colval := color.RGBA{
-					uint8(int(csr) * calcval % 255),
-					uint8(int(csg) * calcval % 255),
-					uint8(int(csb) * calcval % 255),
-					255,
+			defer wg.Done()
+			if fullHeight {
+				for y := cy1; y < cy2; y++ {
+					colval := pixelColor(x, y, width, height, csr, csg, csb)
+					img.Set(int(x)-int(cx1), int(y), colval)
+					img.Set(int(x)-int(cx1), int(height)-int(y)-1, colval)
 				}
-				img.Set(int(x)-int(cx1), int(y)-int(cy1), colval)
+			} else {
+				for y := cy1; y < cy2; y++ {
+					colval := pixelColor(x, y, width, height, csr, csg, csb)
+					img.Set(int(x)-int(cx1), int(y)-int(cy1), colval)
+				}
 			}
-			atomic.AddUint64(&done, 1)
 		}(x)
 	}
 
-	var retstr string
+	wg.Wait()
 
-	for {
-		if completed := atomic.LoadUint64(&done); todo > completed {
-			retstr = fmt.Sprintf("\033[2Jcalculated %v%v of Mandelbrot set\n", int(100/float64(todo)*float64(completed)), "%")
-			time.Sleep(time.Millisecond * 10)
-		} else {
-			break
-		}
-	}
-
-	return img, retstr
+	return img, ""
 }
