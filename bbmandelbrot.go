@@ -3,7 +3,7 @@ package bbmandelbrot
 import (
 	"image"
 	"image/color"
-	"math/cmplx"
+	"math"
 	"sync"
 )
 
@@ -21,10 +21,14 @@ func init() {
 	zv = 2.4
 }
 
+func abs(z complex128) float64 {
+	return math.Hypot(real(z), imag(z))
+}
+
 func mandel(c complex128) float64 {
 	z := complex128(0)
 	for i := 0; i < maxiteration; i++ {
-		if cmplx.Abs(z) > 2 {
+		if abs(z) > 2 {
 			return float64(i-1) / maxiteration
 		}
 		z = z*z + c
@@ -37,13 +41,13 @@ func pixelColor(x, y, width, height uint64, csr, csg, csb int) color.RGBA {
 	yf := float64(y)/float64(height)*zh - (zh / 2.0)
 	c := complex(xf, yf)
 	calcval := int(mandel(c) * 255)
-	colval := color.RGBA{
+
+	return color.RGBA{
 		uint8(int(csr) * calcval % 255),
 		uint8(int(csg) * calcval % 255),
 		uint8(int(csb) * calcval % 255),
 		255,
 	}
-	return colval
 }
 
 func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*image.RGBA, string) {
@@ -55,7 +59,7 @@ func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*i
 
 	if height == cy2 && cy1 == 0 {
 		fullHeight = true
-		cy2 = cy2/2
+		cy2 = cy2 / 2
 	}
 
 	for x := cx1; x < cx2; x++ {

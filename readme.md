@@ -1,6 +1,6 @@
-##bbmandelbrot.go
+##bbmandelbrotGo
 
-[![Build Status](https://travis-ci.org/SimonWaldherr/bbmandelbrot.go.svg?branch=master)](https://travis-ci.org/SimonWaldherr/bbmandelbrot.go) 
+[![Build Status](https://travis-ci.org/SimonWaldherr/bbmandelbrotGo.svg?branch=master)](https://travis-ci.org/SimonWaldherr/bbmandelbrotGo) 
 [![Coverage Status](https://coveralls.io/repos/SimonWaldherr/bbmandelbrot.go/badge.png)](https://coveralls.io/r/SimonWaldherr/bbmandelbrot.go)
 
 in memoriam [Benoît B. Mandelbrot](http://en.wikipedia.org/wiki/Benoit_Mandelbrot)  
