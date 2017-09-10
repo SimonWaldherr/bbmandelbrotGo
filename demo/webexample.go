@@ -3,7 +3,7 @@
 package main
 
 import (
-	bbmandelbrot ".."
+	bbmandelbrot "simonwaldherr.de/go/bbmandelbrotGo"
 	"encoding/base64"
 	"fmt"
 	"image/png"

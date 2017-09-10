@@ -50,6 +50,7 @@ func pixelColor(x, y, width, height uint64, csr, csg, csb int) color.RGBA {
 	}
 }
 
+// Mandelbrot generates the Mandelbrot picture as *image.RGBA according to the parameters
 func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*image.RGBA, string) {
 	var wg sync.WaitGroup
 	var fullHeight bool
