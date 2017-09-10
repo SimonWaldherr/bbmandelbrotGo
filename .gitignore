@@ -1,1 +1,3 @@
 demo/cache/*png
+-trash
+.DS_Store
