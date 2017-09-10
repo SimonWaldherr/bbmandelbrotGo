@@ -11,6 +11,8 @@
 
 in memoriam [Benoît B. Mandelbrot](http://en.wikipedia.org/wiki/Benoit_Mandelbrot)  
 the [Mandelbrot set](http://en.wikipedia.org/wiki/Mandelbrot_set) is a very popular [fractal](http://en.wikipedia.org/wiki/Fractal).
+There is a great [Song (and Video) on YouTube about the Mandelbrot(/Julia) fractal](https://www.youtube.com/watch?v=ES-yKOYaXq0). 
+Many thanks to [Jonathan Coulton](https://www.jonathancoulton.com) for this great song and for sharing it under [CC](https://creativecommons.org)-BY-NC
 
 ![Mandelbrot Fractal](https://raw.githubusercontent.com/SimonWaldherr/bbmandelbrotGo/master/mandelbrot.png)
 
