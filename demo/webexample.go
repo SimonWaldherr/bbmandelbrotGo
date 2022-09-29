@@ -3,7 +3,6 @@
 package main
 
 import (
-	bbmandelbrot "simonwaldherr.de/go/bbmandelbrotGo"
 	"encoding/base64"
 	"fmt"
 	"image/png"
@@ -13,8 +12,13 @@ import (
 	"net/url"
 	"os"
 	"runtime"
+	bbmandelbrot "simonwaldherr.de/go/bbmandelbrotGo"
 	"strconv"
 	"strings"
+)
+
+const (
+	cachePath = "cache"
 )
 
 func dataURI(fileName, contentType string) string {
@@ -66,7 +70,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	for y = 0; y < 4; y++ {
 		for x = 0; x < 4; x++ {
-			fname = fmt.Sprintf("cache/%vx%v_%v_%v_%v_%v_mandelbrot.png", width, height, cx1+160*x, cx1+160*(x+1), cy1+160*y, cy1+160*(y+1))
+			fname = fmt.Sprintf("%s/%vx%v_%v_%v_%v_%v_mandelbrot.png", cachePath, width, height, cx1+160*x, cx1+160*(x+1), cy1+160*y, cy1+160*(y+1))
 			if _, err := os.Stat(fname); err != nil {
 				fmt.Println("generating ", fname)
 				img, _ := bbmandelbrot.Mandelbrot(width, height, cx1+160*x, cx1+160*(x+1), cy1+160*y, cy1+160*(y+1), csr, csg, csb)
@@ -100,6 +104,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	if _, err := os.Stat(cachePath); os.IsNotExist(err) {
+		os.Mkdir(cachePath, os.ModePerm)
+	}
+
 	var port string = ":8080"
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	http.HandleFunc("/", handler)
