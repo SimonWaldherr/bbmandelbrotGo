@@ -26,37 +26,38 @@ func abs(z complex128) float64 {
 }
 
 func mandel(c complex128) float64 {
+	var i int
 	z := complex128(0)
-	for i := 0; i < maxiteration; i++ {
+	for i = 0; i < maxiteration; i++ {
 		if abs(z) > 2 {
 			return float64(i-1) / maxiteration
 		}
 		z = z*z + c
 	}
-	return 0
+	return float64(i-1) 
 }
 
-func pixelColor(x, y, width, height uint64, csr, csg, csb int) color.RGBA {
+func pixelColor(x, y, width, height uint64, csr, csg, csb int) color.RGBA64 {
 	xf := float64(x)/float64(width)*zv - (zv/2.0 + 0.5)
 	yf := float64(y)/float64(height)*zh - (zh / 2.0)
 	c := complex(xf, yf)
-	calcval := int(mandel(c) * 255)
+	calcval := int(mandel(c) * 65535)
 
-	return color.RGBA{
-		uint8(int(csr) * calcval % 255),
-		uint8(int(csg) * calcval % 255),
-		uint8(int(csb) * calcval % 255),
-		255,
+	return color.RGBA64{
+		uint16(int(csr) * calcval % 65535),
+		uint16(int(csg) * calcval % 65535),
+		uint16(int(csb) * calcval % 65535),
+		65535,
 	}
 }
 
 // Mandelbrot generates the Mandelbrot picture as *image.RGBA according to the parameters
-func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*image.RGBA, string) {
+func Mandelbrot(width, height, cx1, cx2, cy1, cy2 uint64, csr, csg, csb int) (*image.RGBA64, string) {
 	var wg sync.WaitGroup
 	var fullHeight bool
 
 	background := image.Rect(0, 0, int(cx2-cx1), int(cy2-cy1))
-	img := image.NewRGBA(background)
+	img := image.NewRGBA64(background)
 
 	if height == cy2 && cy1 == 0 {
 		fullHeight = true

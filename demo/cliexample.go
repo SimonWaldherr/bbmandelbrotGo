@@ -6,7 +6,8 @@ import (
 	bbmandelbrot "simonwaldherr.de/go/bbmandelbrotGo"
 	"flag"
 	"fmt"
-	"image/png"
+	//"image/png"
+	"image/jpeg"
 	"log"
 	"os"
 	"time"
@@ -29,7 +30,7 @@ var (
 func main() {
 	start := time.Now()
 
-	flag.StringVar(&fname, "f", "mandelbrot.png", "destination filename")
+	flag.StringVar(&fname, "f", "mandelbrot.jpg", "destination filename")
 	flag.Uint64Var(&width, "w", 2560, "fractal width")
 	flag.Uint64Var(&height, "h", 2560, "fractal height")
 	flag.Uint64Var(&cx1, "cx1", 0, "crop width start")
@@ -57,7 +58,7 @@ func main() {
 		log.Fatalf("Error opening file: %s\n", err)
 	}
 
-	err = png.Encode(file, img)
+	err = jpeg.Encode(file, img, nil)
 	if err != nil {
 		log.Fatalf("Error encoding image: %s\n", err)
 	}

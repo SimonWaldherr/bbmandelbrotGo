@@ -85,7 +85,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			uri := dataURI(fname, "image/png")
-			fmt.Fprintf(w, "<a href=\"?w=%d&h=%d&cx1=%d&cy1=%d\"><img src=\"%v\" /></a>", width*4, height*4, cx1+x*width, cy1+y*height, uri)
+			if cy1 == 0 || cx1 == 0 {
+				fmt.Fprintf(w, "<a href=\"?w=%d&h=%d&cx1=%d&cy1=%d\"><img src=\"%v\" /></a>", width*4, height*4, cx1+x*width, cy1+y*height, uri)
+			} else {
+				fmt.Fprintf(w, "<a href=\"?w=%d&h=%d&cx1=%d&cy1=%d\"><img src=\"%v\" /></a>", width*4, height*4, cx1*x+width, cy1*y+height, uri)
+			}
+			
 		}
 		fmt.Fprintf(w, "<br />")
 	}
