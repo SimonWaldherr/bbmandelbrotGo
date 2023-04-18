@@ -1,6 +1,5 @@
 # bbmandelbrotGo
 
-[![Build Status](https://travis-ci.org/SimonWaldherr/bbmandelbrotGo.svg?branch=master)](https://travis-ci.org/SimonWaldherr/bbmandelbrotGo) 
 [![Coverage Status](https://coveralls.io/repos/SimonWaldherr/bbmandelbrotGo/badge.png)](https://coveralls.io/r/SimonWaldherr/bbmandelbrotGo) 
 [![Go Report Card](https://goreportcard.com/badge/github.com/simonwaldherr/bbmandelbrotGo)](https://goreportcard.com/report/github.com/simonwaldherr/bbmandelbrotGo) 
 [![codebeat badge](https://codebeat.co/badges/f99a42ee-8dae-4cb9-8c88-c27d20b79edd)](https://codebeat.co/projects/github-com-simonwaldherr-bbmandelbrotgo-master)  
